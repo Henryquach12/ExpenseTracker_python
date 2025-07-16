@@ -25,6 +25,7 @@ while running:
     answer = input("Do you want to play again? (y/n): ").lower()
     if not answer == "y":
         running = False
+print("Thanks for your playing!")
 
 
     
