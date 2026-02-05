@@ -15,7 +15,9 @@ def validInt(value):
 def handleAdd(args, service):
     service.newExpense(note=args.description, amount=args.amount)
 def handleList(args, service):
-    pass
+    service.showExpense()
+def handleSum(args, service):
+    service.sumExpense()
 
 def main():
     # Main parser
@@ -35,19 +37,24 @@ def main():
 
     # 'list' argument
     list_parser = subparsers.add_parser('list')
+    list_parser.set_defaults(func=handleList)
 
     # 'summary' argument
     summary_parser = subparsers.add_parser('summary')
     summary_parser.add_argument('--month', type=validInt, nargs='+', help="(Optional) total expense of a specific month")
-
+    summary_parser.set_defaults(func=handleSum)
+    
     # 'delete' argument
     delete_parser = subparsers.add_parser('delete')
     delete_parser.add_argument('--id' , type=validInt, required=True, help="Id of the expense")
 
     # Read and validate CLI arguments, then store them in args
     args = parser.parse_args()
-    
+
+    # Object for expenseTracker class
     service = Service.expenseTracker()
+
+    # Execute argument
     if hasattr(args, 'func'):
         args.func(args, service)
     else:

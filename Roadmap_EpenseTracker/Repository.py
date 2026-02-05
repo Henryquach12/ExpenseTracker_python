@@ -1,22 +1,46 @@
 import os
 import csv
+import pandas as pd
 class expenseRepo:
     def __init__(self, file_name="trackerFile.csv"):
         self.file_name = file_name
         self.checkFile()
-    #Check if CSV file does exist
+    # Check if CSV file does exist
     def checkFile(self):
         if not os.path.exists(self.file_name):
             with open(self.file_name, 'w', newline="", encoding='utf-8') as file:
                 writer = csv.writer(file)
                 writer.writerow(['ID','Date','Description','Amount'])
-    #Create unique ID 
+    # Create unique ID 
     def takeIndex(self):
         with open(self.file_name, 'r', encoding='utf-8') as file:
             return sum(1 for _ in file) #ID counted, except header    
 
-    #Insert new record
-    def insert(self, data):
-            with open(self.file_name, 'a', newline='', encoding='utf-8') as file:
-                writer = csv.writer(file)
-                writer.writerow(data)
+    # Insert new record
+    def insertData(self, data):
+        with open(self.file_name, 'a', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(data)
+
+    # Read current database data
+    def readData(self):
+        with open(self.file_name, 'r', newline='', encoding='utf-8') as file:
+            reader = csv.reader(file)
+            for index, r in enumerate(reader):
+                if index >= 1:
+                    print(f"{r[0]:<4} {r[1]:<12} {r[2]:<15} ${r[3]:>7}")
+                else:
+                    print(f"{r[0]:<4} {r[1]:<12} {r[2]:<15} {r[3]:>7}")
+                    
+    # Calculate total expense
+    def calcSum(self):
+        total = 0
+        with open(self.file_name, 'r', newline='', encoding='utf-8') as file:
+            reader = csv.reader(file)
+            for index, row in enumerate(reader):
+                if index >= 1:
+                    total = total + int(row[3])
+            return total
+
+
+
